@@ -14,6 +14,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,13 +39,13 @@ public class User implements UserDetails {
     @Column
     private String name;
 
-    @Column
+    @Column(unique = true)
     private String username;
 
     @Column
     private String password;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column
     private ERole role;
 
@@ -60,20 +61,36 @@ public class User implements UserDetails {
     @Column
     private boolean isEnabled;
 
+    /**
+     * An embeddable class representing the key for a user.
+     */
     @Embeddable
     @Getter
     @Setter
     public class UserKey {
+        /**
+         * Auto-generated user number.
+         */
         @GeneratedValue(strategy = GenerationType.AUTO)
         private Long userNo;
+
+        /**
+         * Auto-generated UUID for the user key.
+         */
         @GeneratedValue(strategy = GenerationType.UUID)
-        private UUID uuid;
+        private UUID uuid = UUID.randomUUID();
     }
 
     /**
-     * @return Collection<? extends GrantedAuthority>
+     * Retrieves the authorities for the user based on their role.
+     *
+     * @return A collection of GrantedAuthority objects representing the user's
+     *         role.
+     * @since 2023-11-22
+     * @author Siin
      */
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
+
 }
