@@ -34,6 +34,8 @@ public class UserServiceImpl implements UserService {
      *                                  the user are null.
      * @throws IllegalArgumentException If the provided username already exists in
      *                                  the repository.
+     * @author Siin
+     * @since 2023-11-21
      */
     public User create(User user) {
         log.info("UserServiceImpl.create begin");
@@ -69,6 +71,8 @@ public class UserServiceImpl implements UserService {
      *
      * @param input The input DTO containing user information.
      * @return The output DTO containing the key of the created user.
+     * @author Siin
+     * @since 2023-11-21
      */
     public CreateUserOutDTO createUser(CreateUserInputDTO input) {
         log.info("UserServiceImpl.createUser begin");
@@ -86,4 +90,6 @@ public class UserServiceImpl implements UserService {
         return CreateUserOutDTO.builder().key(user.getUserKey()).build();
     }
 
+
+    
 }
