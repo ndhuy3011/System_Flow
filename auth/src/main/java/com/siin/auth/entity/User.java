@@ -18,6 +18,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,14 +34,25 @@ import lombok.Setter;
 @Getter
 @Setter
 public class User implements UserDetails {
-    @EmbeddedId
-    private UserKey userKey;
+
+        /**
+         * Auto-generated user number.
+         */
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private Long userNo;
+
+
+
+
 
     @Column
     private String name;
 
     @Column(unique = true)
     private String username;
+
+    private UUID uuid ;
 
     @Column
     private String password;
@@ -64,22 +76,7 @@ public class User implements UserDetails {
     /**
      * An embeddable class representing the key for a user.
      */
-    @Embeddable
-    @Getter
-    @Setter
-    public class UserKey {
-        /**
-         * Auto-generated user number.
-         */
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        private Long userNo;
-
-        /**
-         * Auto-generated UUID for the user key.
-         */
-        @GeneratedValue(strategy = GenerationType.UUID)
-        private UUID uuid = UUID.randomUUID();
-    }
+ 
 
     /**
      * Retrieves the authorities for the user based on their role.

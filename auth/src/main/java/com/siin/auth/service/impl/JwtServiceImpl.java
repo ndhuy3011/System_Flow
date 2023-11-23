@@ -14,16 +14,23 @@ import org.springframework.stereotype.Service;
 
 import com.siin.auth.dto.jwt.CreateJwtInputDTO;
 import com.siin.auth.dto.jwt.CreateJwtOutDTO;
+import com.siin.auth.dto.otp.CreateOtpDTO;
 import com.siin.auth.entity.User;
 import com.siin.auth.service.JwtService;
+import com.siin.auth.service.OtpService;
 
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class JwtServiceImpl implements JwtService {
 
     @Resource
     private JwtEncoder jwtEncoder;
+
+    @Resource
+    private OtpService otpService;
 
     /**
      * Creates a JSON Web Token (JWT) for the given user.
@@ -42,7 +49,7 @@ public class JwtServiceImpl implements JwtService {
                 .issuer("Auth-issuer")
 
                 // Set the subject of the JWT (typically the user's UUID)
-                .subject(user.getUserKey().getUuid().toString())
+                .subject(user.getUuid().toString())
 
                 // Set the audience of the JWT (typically the authorized parties)
                 .audience(List.of("Auth-audience"))
@@ -72,7 +79,7 @@ public class JwtServiceImpl implements JwtService {
                 .issuer("Auth-issuer-ref")
 
                 // Set the subject of the reference JWT (typically the user's UUID)
-                .subject(user.getUserKey().getUuid().toString())
+                .subject(user.getUuid().toString())
 
                 // Set the audience of the reference JWT (typically the authorized parties)
                 .audience(List.of("Auth-audience-ref"))
@@ -95,6 +102,8 @@ public class JwtServiceImpl implements JwtService {
      * @author Siin
      */
     public CreateJwtOutDTO createJwt(CreateJwtInputDTO input) {
+
+        log.info("JwtServiceImpl.createJwt");
         // Create an authentication object using the provided username and password
         Authentication authentication = new UsernamePasswordAuthenticationToken(input.username(), input.password());
 
@@ -103,6 +112,9 @@ public class JwtServiceImpl implements JwtService {
 
         // Retrieve the authenticated user from the authentication principal
         var user = (User) authentication.getPrincipal();
+
+        //Create create the OTP and Send OTP from user
+        otpService.createOtp(CreateOtpDTO.builder().username(user.getUsername()).uuid(user.getUuid()).build());
 
         // Create and return the output DTO containing access and reference JWTs
         return CreateJwtOutDTO.builder()

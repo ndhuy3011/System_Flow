@@ -1,6 +1,7 @@
 package com.siin.auth.service.impl;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,7 @@ import com.siin.auth.repository.UserRepository;
 import com.siin.auth.service.UserService;
 
 import jakarta.annotation.Resource;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -41,6 +43,7 @@ public class UserServiceImpl implements UserService {
      * @author Siin
      * @since 2023-11-21
      */
+    @Transactional
     public User create(User user) {
         log.info("UserServiceImpl.create begin");
 
@@ -49,7 +52,6 @@ public class UserServiceImpl implements UserService {
 
         // Ensure that the user's key is null (assuming that null is the expected value
         // for a new user)
-        Assert.isNull(user.getUserKey(), "Key is null");
 
         // Ensure that the username, password, and name fields are not null
         Assert.notNull(user.getUsername(), "Username is not null");
@@ -78,6 +80,7 @@ public class UserServiceImpl implements UserService {
      * @author Siin
      * @since 2023-11-21
      */
+    @Transactional
     public CreateUserOutDTO createUser(CreateUserInputDTO input) {
         log.info("UserServiceImpl.createUser begin");
 
@@ -86,12 +89,13 @@ public class UserServiceImpl implements UserService {
                 .name(input.name())
                 .username(input.username())
                 .password(input.password())
+
                 .build());
 
         log.info("UserServiceImpl.createUser end");
 
         // Return an output DTO with the key of the created user
-        return CreateUserOutDTO.builder().key(user.getUserKey()).build();
+        return CreateUserOutDTO.builder().uuid(user.getUuid()).build();
     }
 
     /**
@@ -103,6 +107,7 @@ public class UserServiceImpl implements UserService {
      * @author Siin
      */
     public GetInfoUserOutDTO getInfoUserAuth() {
+        log.info("UserServiceImpl.getInfoUserAuth");
         // Retrieve the authenticated user from the security context
         var userAuth = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -125,9 +130,19 @@ public class UserServiceImpl implements UserService {
      * @author Siin
      */
     public User getInfoFindByUsername(String username) {
+        log.info("UserServiceImpl.getInfoFindByUsername");
+        // Ensure that the username fields are not null
+        Assert.notNull(username, "Username is not null");
         // Attempt to retrieve the user from the repository by username
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new NoSuchElementException("User not found with : " + username));
+                .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
+    }
+
+    @Override
+    public User getInfoFindByUsernameAndUUid(String username, UUID uuid) {
+        log.info("UserServiceImpl.getInfoFindByUsernameAndUUid");
+        return userRepository.findByUsernameAndUuid(username, uuid)
+                .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
     }
 
 }
