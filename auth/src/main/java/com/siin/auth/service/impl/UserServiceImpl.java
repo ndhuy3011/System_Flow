@@ -1,11 +1,15 @@
 package com.siin.auth.service.impl;
 
+import java.util.NoSuchElementException;
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.siin.auth.dto.user.CreateUserInputDTO;
 import com.siin.auth.dto.user.CreateUserOutDTO;
+import com.siin.auth.dto.user.GetInfoUserOutDTO;
 import com.siin.auth.entity.User;
 import com.siin.auth.repository.UserRepository;
 import com.siin.auth.service.UserService;
@@ -90,6 +94,40 @@ public class UserServiceImpl implements UserService {
         return CreateUserOutDTO.builder().key(user.getUserKey()).build();
     }
 
+    /**
+     * Retrieves user information based on the authenticated user and returns the
+     * corresponding output DTO.
+     *
+     * @return The output DTO containing user information.
+     * @since 2023-11-23
+     * @author Siin
+     */
+    public GetInfoUserOutDTO getInfoUserAuth() {
+        // Retrieve the authenticated user from the security context
+        var userAuth = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-    
+        // Retrieve detailed user information based on the authenticated user's username
+        var user = getInfoFindByUsername(userAuth.getUsername());
+
+        // Build and return the output DTO containing user information
+        return GetInfoUserOutDTO.builder()
+                .name(user.getName())
+                .build();
+    }
+
+    /**
+     * Retrieves detailed user information based on the provided username.
+     *
+     * @param username The username of the user to retrieve information for.
+     * @return The User object containing detailed information.
+     * @throws NoSuchElementException If the user is not found.
+     * @since 2023-11-23
+     * @author Siin
+     */
+    public User getInfoFindByUsername(String username) {
+        // Attempt to retrieve the user from the repository by username
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("User not found with : " + username));
+    }
+
 }
