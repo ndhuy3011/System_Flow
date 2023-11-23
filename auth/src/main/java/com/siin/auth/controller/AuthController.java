@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.siin.auth.dto.jwt.CreateJwtInputDTO;
 import com.siin.auth.dto.jwt.CreateJwtOutDTO;
+import com.siin.auth.dto.user.GetInfoUserOutDTO;
 import com.siin.auth.service.JwtService;
+import com.siin.auth.service.UserService;
 
 import jakarta.annotation.Resource;
 
@@ -18,8 +20,16 @@ public class AuthController {
     @Resource
     private JwtService jwtService;
 
+    @Resource
+    private UserService userService;
+
     @PostMapping("/login")
     public ResponseEntity<CreateJwtOutDTO> createUser(@RequestBody CreateJwtInputDTO input) {
         return ResponseEntity.ok(jwtService.createJwt(input));
+    }
+
+    @PostMapping("/info")
+    public ResponseEntity<GetInfoUserOutDTO> getUserAuth() {
+        return ResponseEntity.ok(userService.getInfoUserAuth());
     }
 }
