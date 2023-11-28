@@ -23,4 +23,6 @@ public class UserController {
     public ResponseEntity<CreateUserOutDTO> createUser(@RequestBody CreateUserInputDTO input) {
         return ResponseEntity.ok(userService.createUser(input));
     }
+
+
 }

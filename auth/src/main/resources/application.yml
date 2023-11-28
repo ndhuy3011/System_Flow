@@ -9,3 +9,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/

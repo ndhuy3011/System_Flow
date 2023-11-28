@@ -1,0 +1,18 @@
+spring:
+  mail:
+    host: your-smtp-host
+    port: 8888
+    username: your-username
+    password: your-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
