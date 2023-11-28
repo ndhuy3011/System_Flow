@@ -8,11 +8,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import com.siin.auth.clients.EmailFeignClient;
+import com.siin.auth.dto.emails.SendEmailAuthInputDTO;
+import com.siin.auth.dto.otp.CreateOtpDTO;
+import com.siin.auth.dto.user.CreateResetEmailInputDTO;
+import com.siin.auth.dto.user.CreateRestEmailOutDTO;
 import com.siin.auth.dto.user.CreateUserInputDTO;
 import com.siin.auth.dto.user.CreateUserOutDTO;
 import com.siin.auth.dto.user.GetInfoUserOutDTO;
 import com.siin.auth.entity.User;
 import com.siin.auth.repository.UserRepository;
+import com.siin.auth.service.OtpService;
 import com.siin.auth.service.UserService;
 
 import jakarta.annotation.Resource;
@@ -27,6 +33,11 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Resource
     private PasswordEncoder passwordEncoder;
+
+    @Resource
+    private OtpService otpService;
+    @Resource
+    private EmailFeignClient emailFeignClient;
 
     /**
      * Creates a new user and saves it to the repository.
@@ -89,8 +100,12 @@ public class UserServiceImpl implements UserService {
                 .name(input.name())
                 .username(input.username())
                 .password(input.password())
-
                 .build());
+        // Build a new otp using the input DTO
+        var otp = otpService
+                .createOtp(CreateOtpDTO.builder().username(user.getUsername()).uuid(user.getUuid()).build());
+        // Send Email Auth
+        sendEmailAuth(user.getUsername(), otp.getOtpNo(), user.getName());
 
         log.info("UserServiceImpl.createUser end");
 
@@ -138,11 +153,71 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
     }
 
-    @Override
+    /**
+     * Retrieves user information based on the provided username and UUID.
+     *
+     * @param username The username of the user.
+     * @param uuid     The UUID of the user.
+     * @return The user entity.
+     * @throws NoSuchElementException If the user is not found.
+     * @since 2023-11-28
+     * @author Siin
+     */
     public User getInfoFindByUsernameAndUUid(String username, UUID uuid) {
+        // Log information about the method invocation
         log.info("UserServiceImpl.getInfoFindByUsernameAndUUid");
+
+        // Retrieve the user based on the provided username and UUID
         return userRepository.findByUsernameAndUuid(username, uuid)
                 .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
+    }
+
+    /**
+     * Initiates the process for resetting the email authentication by generating a
+     * new OTP,
+     * sending it to the user's email address, and updating the OTP in the system.
+     *
+     * @param input The input DTO containing information for resetting the email
+     *              authentication.
+     * @return The output DTO indicating the status of the email authentication
+     *         reset.
+     * @throws NoSuchElementException If the user is not found.
+     * @since 2023-11-28
+     * @author Siin
+     */
+    public CreateRestEmailOutDTO restEmailAuth(CreateResetEmailInputDTO input) {
+        // Retrieve the user based on the provided UUID
+        var user = userRepository.findByUuid(input.uuid())
+                .orElseThrow(() -> new NoSuchElementException("User not found with uuid: " + input.uuid()));
+
+        // Generate a new OTP for the user's email authentication and update the OTP in
+        // the system
+        var otp = otpService.refOtp(CreateOtpDTO.builder().username(user.getUsername()).uuid(input.uuid()).build());
+
+        // Send the authentication email with the new OTP to the user
+        sendEmailAuth(user.getUsername(), otp.getOtpNo(), user.getName());
+
+        // Return an output DTO indicating the success of the email authentication reset
+        return CreateRestEmailOutDTO.builder().message("OK").build();
+    }
+
+    /**
+     * Sends an authentication email with the provided OTP to the specified user's
+     * email address.
+     *
+     * @param username The email address of the user.
+     * @param otp      The One-Time Password (OTP) to be included in the email.
+     * @param name     The name of the user.
+     * @since 2023-11-28
+     * @author Siin
+     */
+    private void sendEmailAuth(String username, String otp, String name) {
+        // Send an authentication email using Feign Client
+        emailFeignClient.sendEmailAuthI(SendEmailAuthInputDTO.builder()
+                .email(username)
+                .otp(otp)
+                .name(name)
+                .build());
     }
 
 }

@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.siin.auth.dto.user.CreateResetEmailInputDTO;
+import com.siin.auth.dto.user.CreateRestEmailOutDTO;
 import com.siin.auth.dto.user.CreateUserInputDTO;
 import com.siin.auth.dto.user.CreateUserOutDTO;
 import com.siin.auth.service.UserService;
@@ -20,9 +22,13 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<CreateUserOutDTO> createUser(@RequestBody CreateUserInputDTO input) {
+    public ResponseEntity<CreateUserOutDTO> postCreateUser(@RequestBody CreateUserInputDTO input) {
         return ResponseEntity.ok(userService.createUser(input));
     }
 
+    @PostMapping("/create/restEmail")
+    public ResponseEntity<CreateRestEmailOutDTO> postRestEmailAuth(@RequestBody CreateResetEmailInputDTO input) {
+        return ResponseEntity.ok(userService.restEmailAuth(input));
+    }
 
 }

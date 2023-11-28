@@ -2,6 +2,8 @@ package com.siin.auth.service;
 
 import java.util.UUID;
 
+import com.siin.auth.dto.user.CreateResetEmailInputDTO;
+import com.siin.auth.dto.user.CreateRestEmailOutDTO;
 import com.siin.auth.dto.user.CreateUserInputDTO;
 import com.siin.auth.dto.user.CreateUserOutDTO;
 import com.siin.auth.dto.user.GetInfoUserOutDTO;
@@ -17,5 +19,7 @@ public interface UserService {
     CreateUserOutDTO createUser(CreateUserInputDTO input);
 
     GetInfoUserOutDTO getInfoUserAuth();
+
+    CreateRestEmailOutDTO restEmailAuth(CreateResetEmailInputDTO input);
 
 }

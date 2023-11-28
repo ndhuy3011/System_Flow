@@ -18,6 +18,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,9 +39,11 @@ public class User implements UserDetails {
     private Long userNo;
 
     @Column
+
     private String name;
 
     @Column(unique = true)
+    @Email
     private String username;
 
     private UUID uuid;
