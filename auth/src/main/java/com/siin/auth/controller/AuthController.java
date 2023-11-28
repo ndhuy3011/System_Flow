@@ -32,5 +32,5 @@ public class AuthController {
     public ResponseEntity<GetInfoUserOutDTO> getUserAuth() {
         return ResponseEntity.ok(userService.getInfoUserAuth());
     }
-    
+
 }

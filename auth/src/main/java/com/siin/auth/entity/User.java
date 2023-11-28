@@ -11,8 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.siin.auth.enums.ERole;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -35,16 +33,9 @@ import lombok.Setter;
 @Setter
 public class User implements UserDetails {
 
-        /**
-         * Auto-generated user number.
-         */
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        private Long userNo;
-
-
-
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long userNo;
 
     @Column
     private String name;
@@ -52,7 +43,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
 
-    private UUID uuid ;
+    private UUID uuid;
 
     @Column
     private String password;
@@ -76,7 +67,6 @@ public class User implements UserDetails {
     /**
      * An embeddable class representing the key for a user.
      */
- 
 
     /**
      * Retrieves the authorities for the user based on their role.
