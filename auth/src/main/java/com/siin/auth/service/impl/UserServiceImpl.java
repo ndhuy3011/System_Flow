@@ -8,16 +8,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import com.siin.auth.clients.EmailFeignClient;
-import com.siin.auth.dto.emails.SendEmailAuthInputDTO;
 import com.siin.auth.dto.otp.CreateOtpDTO;
 import com.siin.auth.dto.user.CreateResetEmailInputDTO;
 import com.siin.auth.dto.user.CreateRestEmailOutDTO;
 import com.siin.auth.dto.user.CreateUserInputDTO;
 import com.siin.auth.dto.user.CreateUserOutDTO;
 import com.siin.auth.dto.user.GetInfoUserOutDTO;
-import com.siin.auth.entity.User;
+import com.siin.auth.models.User;
 import com.siin.auth.repository.UserRepository;
+import com.siin.auth.service.EmailService;
 import com.siin.auth.service.OtpService;
 import com.siin.auth.service.UserService;
 
@@ -37,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Resource
     private OtpService otpService;
     @Resource
-    private EmailFeignClient emailFeignClient;
+    private EmailService emailService;
 
     /**
      * Creates a new user and saves it to the repository.
@@ -105,7 +104,7 @@ public class UserServiceImpl implements UserService {
         var otp = otpService
                 .createOtp(CreateOtpDTO.builder().username(user.getUsername()).uuid(user.getUuid()).build());
         // Send Email Auth
-        sendEmailAuth(user.getUsername(), otp.getOtpNo(), user.getName());
+        emailService.sendEmailAuthKafka(user.getUsername(), otp.getOtpNo(), user.getName());
 
         log.info("UserServiceImpl.createUser end");
 
@@ -195,29 +194,10 @@ public class UserServiceImpl implements UserService {
         var otp = otpService.refOtp(CreateOtpDTO.builder().username(user.getUsername()).uuid(input.uuid()).build());
 
         // Send the authentication email with the new OTP to the user
-        sendEmailAuth(user.getUsername(), otp.getOtpNo(), user.getName());
+        emailService.sendEmailAuthKafka(user.getUsername(), otp.getOtpNo(), user.getName());
 
         // Return an output DTO indicating the success of the email authentication reset
         return CreateRestEmailOutDTO.builder().message("OK").build();
-    }
-
-    /**
-     * Sends an authentication email with the provided OTP to the specified user's
-     * email address.
-     *
-     * @param username The email address of the user.
-     * @param otp      The One-Time Password (OTP) to be included in the email.
-     * @param name     The name of the user.
-     * @since 2023-11-28
-     * @author Siin
-     */
-    private void sendEmailAuth(String username, String otp, String name) {
-        // Send an authentication email using Feign Client
-        emailFeignClient.sendEmailAuthI(SendEmailAuthInputDTO.builder()
-                .email(username)
-                .otp(otp)
-                .name(name)
-                .build());
     }
 
 }

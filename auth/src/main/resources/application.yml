@@ -9,6 +9,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  kafka:
+    bootstrap-servers:
+      - localhost:29092
 eureka:
   instance:
     hostname: localhost

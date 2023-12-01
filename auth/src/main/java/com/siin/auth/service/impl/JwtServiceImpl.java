@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import com.siin.auth.dto.jwt.CreateJwtInputDTO;
 import com.siin.auth.dto.jwt.CreateJwtOutDTO;
 import com.siin.auth.dto.otp.CreateOtpDTO;
-import com.siin.auth.entity.User;
+import com.siin.auth.models.User;
 import com.siin.auth.service.JwtService;
 import com.siin.auth.service.OtpService;
 

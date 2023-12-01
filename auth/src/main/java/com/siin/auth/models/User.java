@@ -1,4 +1,4 @@
-package com.siin.auth.entity;
+package com.siin.auth.models;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -39,7 +39,6 @@ public class User implements UserDetails {
     private Long userNo;
 
     @Column
-
     private String name;
 
     @Column(unique = true)

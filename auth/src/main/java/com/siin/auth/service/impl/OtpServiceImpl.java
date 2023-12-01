@@ -7,7 +7,7 @@ import java.util.Random;
 import org.springframework.stereotype.Service;
 
 import com.siin.auth.dto.otp.CreateOtpDTO;
-import com.siin.auth.entity.Otp;
+import com.siin.auth.models.Otp;
 import com.siin.auth.repository.OtpRepository;
 import com.siin.auth.service.OtpService;
 import com.siin.auth.service.UserService;
