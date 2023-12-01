@@ -7,7 +7,7 @@ import com.siin.auth.dto.user.CreateRestEmailOutDTO;
 import com.siin.auth.dto.user.CreateUserInputDTO;
 import com.siin.auth.dto.user.CreateUserOutDTO;
 import com.siin.auth.dto.user.GetInfoUserOutDTO;
-import com.siin.auth.entity.User;
+import com.siin.auth.models.User;
 
 public interface UserService {
     User create(User user);

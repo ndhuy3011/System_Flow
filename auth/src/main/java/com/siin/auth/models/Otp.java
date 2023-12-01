@@ -1,4 +1,4 @@
-package com.siin.auth.entity;
+package com.siin.auth.models;
 
 import java.util.UUID;
 
