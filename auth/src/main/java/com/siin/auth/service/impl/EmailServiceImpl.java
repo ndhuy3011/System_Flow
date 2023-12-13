@@ -2,7 +2,6 @@ package com.siin.auth.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.siin.auth.clients.EmailFeignClient;
 import com.siin.auth.dto.emails.SendEmailAuthInputDTO;
 import com.siin.auth.service.EmailService;
 import com.siin.auth.service.KafkaProducerService;
@@ -17,8 +16,7 @@ public class EmailServiceImpl implements EmailService {
     @Resource
     KafkaProducerService kafkaProducer;
 
-    @Resource
-    EmailFeignClient emailFeignClient;
+
 
     /**
      * Sends an authentication email with the provided OTP to the specified user's
@@ -33,11 +31,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendEmailAuthClient(String username, String otp, String name) {
         log.info("EmailServiceImpl.sendEmailAuthClient");
         // Send an authentication email using Feign Client
-        emailFeignClient.sendEmailAuthI(SendEmailAuthInputDTO.builder()
-                .email(username)
-                .otp(otp)
-                .name(name)
-                .build());
+ 
     }
 
     /**

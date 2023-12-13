@@ -1,4 +1,4 @@
-package com.siin.customer.models;
+package com.siin.auth.models;
 
 import java.util.Date;
 import java.util.UUID;
@@ -7,8 +7,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -19,31 +17,26 @@ import lombok.Setter;
 
 @Entity
 @Table
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
-@Setter
 @DynamicUpdate
-public class Customer {
-
+public class ChangePassword {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long custNo;
-
-    @Column(unique = true, nullable = false, updatable = false)
     private UUID uuid;
 
     @Column
-    private String lastName;
+    private String oldPassword;
 
     @Column
-    private String fristName;
+    private String newPassword;
 
     @Column
-    private Date birthday;
+    private boolean isEnabled;
 
-    @Column(nullable = false)
-    private String numberPhone;
+    @Column
+    private Date expiresAt;
 
 }

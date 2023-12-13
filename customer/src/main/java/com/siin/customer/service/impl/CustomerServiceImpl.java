@@ -28,4 +28,10 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.save(input);
     }
 
+    @Transactional
+    public Customer modifiedCustom(Customer input) {
+        Assert.isTrue(!customerRepository.existsById(input.getCustNo()), "Customer not found");
+        return customerRepository.save(input);
+    }
+
 }

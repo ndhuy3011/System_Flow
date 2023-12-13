@@ -26,6 +26,9 @@ import com.nimbusds.jose.proc.SecurityContext;
 @EnableWebSecurity
 public class AuthenConfig {
 
+
+    
+
     /**
      * Configures and provides a BCryptPasswordEncoder bean for password encoding.
      *

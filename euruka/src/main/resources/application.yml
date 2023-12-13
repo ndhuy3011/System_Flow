@@ -1,3 +1,6 @@
+spring:
+  application:
+    name: euruka-service
 server:
   port: 8761
 eureka:

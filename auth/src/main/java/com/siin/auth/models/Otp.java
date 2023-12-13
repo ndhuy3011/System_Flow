@@ -2,6 +2,8 @@ package com.siin.auth.models;
 
 import java.util.UUID;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
@@ -20,6 +22,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
+@DynamicUpdate
 public class Otp {
 
     @EmbeddedId

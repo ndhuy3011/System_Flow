@@ -40,7 +40,7 @@ public class OtpServiceImpl implements OtpService {
         log.info("OtpServiceImpl.createOtp");
 
         // Retrieve detailed user information based on the provided username
-        var user = userService.getInfoFindByUsername(input.username());
+        var user = userService.getInfoFindByUsername(input.username(), false);
 
         // Create an OTP entity with a randomly generated six-digit number and the
         // user's key
@@ -86,7 +86,7 @@ public class OtpServiceImpl implements OtpService {
     @Transactional
     public Otp refOtp(CreateOtpDTO input) {
         // Retrieve detailed user information based on the provided username
-        var user = userService.getInfoFindByUsername(input.username());
+        var user = userService.getInfoFindByUsername(input.username(), false);
 
         // Retrieve the existing OTP entity based on the user's key
         var otp = otpRepository.findById(new Otp.OtpKey(user.getUuid(), user.getUsername()))

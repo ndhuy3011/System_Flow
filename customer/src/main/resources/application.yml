@@ -3,4 +3,17 @@ eureka:
     hostname: localhost
   client:
     service-url:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+server:
+  port: 9091
+spring:
+  application:
+    name: customer-service
+  main:
+    allow-circular-references: true
+  # DataSource Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:54320/security
+    username: postgres
+    password: 30111997
+    driver-class-name: org.postgresql.Driver

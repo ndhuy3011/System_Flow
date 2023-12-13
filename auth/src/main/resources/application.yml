@@ -1,20 +1,70 @@
 server:
   port: 9090
 spring:
+  application:
+    name: auth-service
+  main:
+    allow-circular-references: true
+  # DataSource Configuration
   datasource:
     url: jdbc:postgresql://localhost:54320/security
     username: postgres
     password: 30111997
     driver-class-name: org.postgresql.Driver
+
+  # JPA Configuration
   jpa:
     hibernate:
       ddl-auto: update
+
+  # Kafka Configuration
   kafka:
     bootstrap-servers:
       - localhost:29092
+
+  # Security Configuration for OAuth2 Authorization Server
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          oidc-client:
+            registration:
+              # Client ID and Secret for OAuth2 Client
+              client-id: "oidc-client"
+              client-secret: "{noop}secret" # Using {noop} to indicate plain text storage (for development only)
+
+              # Client Authentication Methods
+              client-authentication-methods:
+                - "client_secret_basic"
+
+              # Authorization Grant Types
+              authorization-grant-types:
+                - "authorization_code"
+                - "refresh_token"
+
+              # Redirect URIs for OAuth2 Client
+              redirect-uris:
+                - "http://localhost:8080/login/oauth2/code/oidc-client"
+
+              # Post-Logout Redirect URIs
+              post-logout-redirect-uris:
+                - "http://localhost:8080/"
+
+              # OAuth2 Scopes
+              scopes:
+                - "openid"
+                - "profile"
+
+            # Require Authorization Consent
+            require-authorization-consent: true
+
 eureka:
   instance:
     hostname: localhost
   client:
     service-url:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+
+logging:
+  level:
+    "[org.springframework.security]": info

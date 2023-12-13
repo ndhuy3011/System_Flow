@@ -1,0 +1,43 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "GatewayApplication",
+      "request": "launch",
+      "mainClass": "com.siin.gateway.GatewayApplication",
+      "projectName": "gateway"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-EurukaApplication<euruka>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.siin.euruka.EurukaApplication",
+      "projectName": "euruka",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env",
+      "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=57955 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=euruka"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-AuthApplication<auth>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.siin.auth.AuthApplication",
+      "projectName": "auth",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env",
+      "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=58258 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=auth"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-CustomerApplication<customer>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.siin.customer.CustomerApplication",
+      "projectName": "customer",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

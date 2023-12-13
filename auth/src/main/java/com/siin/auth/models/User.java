@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +33,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
+@DynamicUpdate
 public class User implements UserDetails {
 
     @Id
@@ -41,10 +43,10 @@ public class User implements UserDetails {
     @Column
     private String name;
 
-    @Column(unique = true)
+    @Column(unique = true, updatable = false)
     @Email
     private String username;
-
+    @Column
     private UUID uuid;
 
     @Column
